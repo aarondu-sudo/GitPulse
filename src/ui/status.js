@@ -1,3 +1,5 @@
+import { escapeHtml } from '../utils.js';
+
 // 创建加载状态
 export function createLoading() {
   const div = document.createElement('div');
@@ -48,13 +50,6 @@ export function createResultCount(count, source) {
     ${source ? `<span class="data-source">来自 ${escapeHtml(source)}</span>` : ''}
   `;
   return div;
-}
-
-function escapeHtml(str) {
-  if (!str) return '';
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
 }
 
 // 状态样式

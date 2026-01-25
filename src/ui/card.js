@@ -1,3 +1,5 @@
+import { escapeHtml } from '../utils.js';
+
 // 语言颜色映射
 const LANGUAGE_COLORS = {
   javascript: '#f1e05a',
@@ -93,13 +95,6 @@ export function createCardGrid(repositories) {
 }
 
 // 工具函数
-function escapeHtml(str) {
-  if (!str) return '';
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
 function formatNumber(num) {
   if (!num) return '0';
   if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
