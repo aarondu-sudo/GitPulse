@@ -22,6 +22,16 @@ export function createCard(repo) {
 
   const langColor = LANGUAGE_COLORS[repo.language?.toLowerCase()] || LANGUAGE_COLORS.default;
 
+  // 设置卡片可点击，跳转到 GitHub 项目页面
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', (e) => {
+    // 如果点击的是已有链接（如标题链接或 GitHub 图标），让默认行为处理
+    if (e.target.closest('a')) {
+      return;
+    }
+    window.open(repo.url, '_blank', 'noopener,noreferrer');
+  });
+
   card.innerHTML = `
     <div class="repo-header">
       <div class="repo-owner">

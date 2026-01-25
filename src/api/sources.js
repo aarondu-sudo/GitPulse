@@ -47,13 +47,13 @@ function normalizeRepository(repo) {
     owner: repo.owner?.login || repo.owner || '',
     description: repo.description || '',
     language: repo.language || '',
-    stars: repo.stars || repo.stargazersCount || 0,
-    forks: repo.forks || repo.forksCount || 0,
-    watchers: repo.watchers || repo.watchersCount || 0,
+    stars: repo.stars || repo.stargazersCount || repo.stargazers_count || 0,
+    forks: repo.forks || repo.forksCount || repo.forks_count || 0,
+    watchers: repo.watchers || repo.watchersCount || repo.watchers_count || 0,
     starsToday: repo.starsToday || 0,
     starsWeekly: repo.starsWeekly || 0,
     updatedAt: repo.updatedAt || repo.updated_at || '',
-    url: repo.url || repo.htmlUrl || '',
+    url: repo.html_url || repo.htmlUrl || repo.url || '',
     avatar: repo.owner?.avatarUrl || repo.owner?.avatar_url || '',
     currentPeriodStars: repo.currentPeriodStars || 0
   };
