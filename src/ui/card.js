@@ -116,8 +116,14 @@ function formatDate(dateStr) {
   if (!dateStr) return '未知';
   const date = new Date(dateStr);
   const now = new Date();
-  const diff = now - date;
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  // 使用日历日期比较，避免时区问题
+  // 将两个日期都归零到当天 00:00:00 再比较
+  const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const diff = nowMidnight - dateMidnight;
+  const days = diff / (1000 * 60 * 60 * 24);  // 这里必然是整数，不需要 Math.floor
 
   if (days === 0) return '今天';
   if (days === 1) return '昨天';
