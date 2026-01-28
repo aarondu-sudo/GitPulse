@@ -1,24 +1,9 @@
-// Module-level debounce timer (persists across re-renders)
-let searchDebounceTimer = null;
-
 // 筛选选项配置
 export const FILTER_OPTIONS = {
   period: [
     { value: 'daily', label: '今日' },
     { value: 'weekly', label: '本周' },
     { value: 'monthly', label: '本月' }
-  ],
-  language: [
-    { value: '', label: '全部语言' },
-    { value: 'javascript', label: 'JavaScript' },
-    { value: 'typescript', label: 'TypeScript' },
-    { value: 'python', label: 'Python' },
-    { value: 'go', label: 'Go' },
-    { value: 'rust', label: 'Rust' },
-    { value: 'java', label: 'Java' },
-    { value: 'cpp', label: 'C++' },
-    { value: 'html', label: 'HTML' },
-    { value: 'css', label: 'CSS' }
   ]
 };
 
@@ -32,18 +17,12 @@ export function createFilters(state) {
     window.setFilters({ period: value });
   });
 
-  // 语言选择
-  const langGroup = createSelectGroup('语言', FILTER_OPTIONS.language, state.filters.language, (value) => {
-    window.setFilters({ language: value });
-  });
-
   // 搜索框
   const searchGroup = createSearchGroup(state.filters.query, (value) => {
     window.setFilters({ query: value });
   });
 
   container.appendChild(periodGroup);
-  container.appendChild(langGroup);
   container.appendChild(searchGroup);
 
   return container;
@@ -81,14 +60,24 @@ function createSearchGroup(value, onChange) {
   input.placeholder = '搜索项目...';
   input.value = value;
 
-  input.addEventListener('input', (e) => {
-    clearTimeout(searchDebounceTimer);
-    searchDebounceTimer = setTimeout(() => {
+  // Only trigger search on Enter key, not on typing
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
       onChange(e.target.value);
-    }, 300);
+    }
+  });
+
+  // Add search button
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'search-button';
+  button.textContent = '搜索';
+  button.addEventListener('click', () => {
+    onChange(input.value);
   });
 
   group.appendChild(input);
+  group.appendChild(button);
   return group;
 }
 
@@ -139,10 +128,33 @@ export const filterStyles = `
   .filter-search {
     flex: 1;
     min-width: 200px;
+    display: flex;
+    gap: 8px;
   }
 
   .filter-search .filter-input {
-    width: 100%;
+    flex: 1;
+  }
+
+  .search-button {
+    padding: 8px 16px;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    font-size: 14px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .search-button:hover {
+    background: #0766ad;
+    border-color: #0766ad;
+  }
+
+  .search-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.2);
   }
 
   @media (max-width: 600px) {
@@ -150,7 +162,15 @@ export const filterStyles = `
       flex-direction: column;
     }
 
+    .filter-search {
+      flex-direction: column;
+    }
+
     .filter-search .filter-input {
+      width: 100%;
+    }
+
+    .search-button {
       width: 100%;
     }
   }

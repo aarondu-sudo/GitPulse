@@ -7,7 +7,6 @@ const state = {
   error: null,
   filters: {
     period: 'weekly',
-    language: '',
     query: ''
   },
   source: null,
@@ -21,12 +20,11 @@ const listeners = new Set();
 function initFromURL() {
   const params = new URLSearchParams(window.location.search);
   state.filters.period = params.get('period') || 'weekly';
-  state.filters.language = params.get('language') || '';
   state.filters.query = params.get('q') || '';
 
   // 从 localStorage 读取用户偏好
   const saved = localStorage.getItem('githubstar-filters');
-  if (saved && !state.filters.period && !state.filters.language) {
+  if (saved && !state.filters.period) {
     const parsed = JSON.parse(saved);
     state.filters = { ...state.filters, ...parsed };
   }
@@ -36,7 +34,6 @@ function initFromURL() {
 function updateURL() {
   const params = new URLSearchParams();
   if (state.filters.period) params.set('period', state.filters.period);
-  if (state.filters.language) params.set('language', state.filters.language);
   if (state.filters.query) params.set('q', state.filters.query);
 
   const newURL = params.toString()
@@ -77,7 +74,7 @@ export function setFilters(newFilters) {
   // Skip API call if only clearing query (no other filters active)
   const isOnlyQueryChange = Object.keys(newFilters).length === 1 && 'query' in newFilters;
   const queryCleared = !state.filters.query;
-  const noOtherFilters = !state.filters.language && state.filters.period === 'weekly';
+  const noOtherFilters = state.filters.period === 'weekly';
 
   if (isOnlyQueryChange && queryCleared && noOtherFilters) {
     // Set empty results without API call
