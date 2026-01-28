@@ -6,3 +6,6 @@ dist/
 
 # Worktrees
 .worktrees/
+
+# Auto Claude data directory
+.auto-claude/

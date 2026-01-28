@@ -73,6 +73,19 @@ export function setFilters(newFilters) {
   updateURL();
   savePreferences();
   notify();
+
+  // Skip API call if only clearing query (no other filters active)
+  const isOnlyQueryChange = Object.keys(newFilters).length === 1 && 'query' in newFilters;
+  const queryCleared = !state.filters.query;
+  const noOtherFilters = !state.filters.language && state.filters.period === 'weekly';
+
+  if (isOnlyQueryChange && queryCleared && noOtherFilters) {
+    // Set empty results without API call
+    state.repositories = [];
+    notify();
+    return;
+  }
+
   // 触发数据加载
   loadRepositories();
 }

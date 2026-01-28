@@ -1,3 +1,6 @@
+// Module-level debounce timer (persists across re-renders)
+let searchDebounceTimer = null;
+
 // 筛选选项配置
 export const FILTER_OPTIONS = {
   period: [
@@ -69,8 +72,6 @@ function createSelectGroup(label, options, value, onChange) {
 }
 
 function createSearchGroup(value, onChange) {
-  let debounceTimer;
-
   const group = document.createElement('div');
   group.className = 'filter-group filter-search';
 
@@ -81,8 +82,8 @@ function createSearchGroup(value, onChange) {
   input.value = value;
 
   input.addEventListener('input', (e) => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
       onChange(e.target.value);
     }, 300);
   });
